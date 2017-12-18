@@ -1,15 +1,24 @@
 {
   "name": "lt-pm",
   "version": "0.0.0",
+  "license": "MIT",
   "description": "Questa è una prova per l'utilizzo di tar",
-  "main": "index.js",
+  "author": {
+    "name": "Hernan Ariel De Luca",
+    "email": "hadeluca@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hertox82/lt-pm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Hertox82/lt-pm/issues"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "packagr": "ng-packagr -p ng-package.json"
   },
-  "author": "Hernan Ariel De Luca",
-  "license": "MIT",
   "devDependencies": {
     "@types/npm": "^2.0.29",
     "@types/tar": "^4.0.0",
