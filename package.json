@@ -3,9 +3,6 @@
   "version": "0.0.0",
   "description": "Questa è una prova per l'utilizzo di tar",
   "main": "index.js",
-  "bin": {
-    "lortom": "lortom.js"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
