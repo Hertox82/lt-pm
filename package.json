@@ -1,0 +1,26 @@
+{
+  "name": "lt-pm",
+  "version": "0.0.0",
+  "description": "Questa è una prova per l'utilizzo di tar",
+  "main": "index.js",
+  "bin": {
+    "lortom": "lortom.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "packagr": "ng-packagr -p ng-package.json"
+  },
+  "author": "Hernan Ariel De Luca",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/npm": "^2.0.29",
+    "@types/tar": "^4.0.0",
+    "ng-packagr": "^1.6.0",
+    "typescript": "~2.3.3"
+  },
+  "dependencies": {
+    "commander": "^2.12.2",
+    "tar": "^4.1.1"
+  }
+}
