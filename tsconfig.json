@@ -24,6 +24,6 @@
     "exclude": [
       "node_modules",
       "src/lt.ts",
-      "src/test.ts"
+      "src/public_api.ts"
     ]
   }
