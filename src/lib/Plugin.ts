@@ -4,16 +4,22 @@ import * as path from 'path';
 import * as tar from 'tar';
 
 export class Plugin {
-    protected name: string;
-    protected vendor: string;
-    protected version: string;
+    protected _name: string;
+    protected _vendor: string;
+    protected _version: string;
     private _dirName: string;
     private _cwd: string;
+    major: string;
+    minor: string;
+    patch: string;
+    installed: boolean;
 
     constructor(_name?: string, _vendor?: string, _version?: string) {
-        this.name = ( _name != undefined) ? _name : '';
-        this.vendor = ( _vendor != undefined) ? _vendor : '';
-        this.version = ( _version != undefined) ? _version : '';
+        this._name = ( _name != undefined) ? _name : '';
+        this._vendor = ( _vendor != undefined) ? _vendor : '';
+        this._version = ( _version != undefined) ? _version : '';
+        this.installed = false;
+        this.splitVersion();
     }
 
     /**
@@ -31,14 +37,54 @@ export class Plugin {
         return this._dirName;
     }
 
+    /**
+     * This function return current working directory
+     */
     get cwd(): string {
         return this._cwd;
     }
 
+    /**
+     * This function set the current working directory
+     * @param theCwd string
+     */
     set cwd(theCwd: string) {
         this._cwd = theCwd;
     }
 
+    /**
+     *  This function get the Vendor
+     */
+    get vendor(): string {
+        return this._vendor;
+    } 
+
+    /**
+     * This function set the Vendor
+     * @param theVendor
+     */
+    set vendor(theVendor: string) {
+        this._vendor = theVendor;
+    }
+
+    /**
+     * This function get the Name
+     */
+    get name(): string {
+        return this._name;
+    } 
+
+    set name(theName: string) {
+        this._name = theName;
+    }
+
+    get version(): string {
+        return this._version;
+    } 
+
+    set version(theVersion: string) {
+        this._version = theVersion;
+    }
     /**
      * this function return a name of Plugin compressed
      */
@@ -88,5 +134,22 @@ export class Plugin {
                 C: folderTo
             })
         );
+    }
+
+    /**
+     * This function split the Version into 3 chunk
+     */
+    protected splitVersion(){
+        if (this._version.length > 0) {
+            let v = this._version.split('.',3);
+            this.major = v[0];
+            this.minor = v[1];
+            this.patch = v[2];
+        }
+        else {
+            this.major = '';
+            this.minor = '';
+            this.patch = '';
+        }
     }
 }
