@@ -62,6 +62,47 @@ export class PluginManager {
     }
 
     /**
+     * Only erase Plugins Folder and maintain the compressedFile
+     * @param path string
+     * @param plugin Plugin
+     */
+    uninstallPlugin(path: string, plugin: Plugin){
+        //TODO
+    }
+
+    /**
+     * Install the Plugin from Folder compressed
+     * @param path string
+     * @param plugin Plugin
+     */
+    installPlugin(path: string, plugin: Plugin){
+        //TODO
+    }
+
+    /**
+     * Compress the Plugin into folder compressed
+     * @param path string
+     * @param plugin Plugin
+     */
+    packagePlugin(path: string, plugin: Plugin) {
+        
+        if(!fs.existsSync(path))
+        {
+            fs.mkdirSync(path);
+        }
+        plugin.compress(path);
+    }
+
+    /**
+     * Erase the compressed file
+     * @param path string
+     * @param plugin Plugin
+     */
+    deletePlugin(path: string, plugin: Plugin) {
+        //TODO
+    }
+
+    /**
      * This function return array from specific folder
      */
     protected getArrayFromFolder(): Plugin[] {
