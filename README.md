@@ -201,10 +201,13 @@ listPluginRepo = pm.getLatestPluginRepo();
 # TODO LIST
 
 this is the List of Things To Do for the next time v 0.3.0
+- [x] CLI 
+
+in version 0.4.0
 - [ ] PluginManger
     - [ ] Update Plugin
 
 
 
-This feature will release on version 0.4.0
+This feature will release on version 0.5.0
 - [ ] Template Manager
