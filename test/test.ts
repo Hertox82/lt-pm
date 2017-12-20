@@ -42,8 +42,9 @@ if(!plManager) {
     const pm = new PluginManager(compr,cwd,depl);
     //this info passed by third party
     const listOfInstalled =[];
-    const listPluginRepo = pm.getLatestPluginRepo(listOfInstalled);
-    const action = Action.Nothing;
+    pm.setListPluginInstalled(listOfInstalled);
+    let listPluginRepo = pm.getLatestPluginRepo();
+    const action = Action.Delete;
 
     switch(+action) {
         case Action.Nothing:
@@ -63,18 +64,24 @@ if(!plManager) {
                 (plugin) => {
                     if(!plugin.installed) {
                         pm.installPlugin(plugin);
-                        plugin.installed = true;
                     }
                 }
             );
         break;
 
         case Action.Package: 
-            
+            let listOfInstalled = pm.getListPluginInstalled();
+            listOfInstalled.forEach((plug) => {
+                if(!plug.compress) {
+                    pm.packagePlugin(plug);
+                }
+            });
         break;
 
         case Action.Delete: 
-
+            let randomIndex = Math.floor(Math.random() * listPluginRepo.length);
+            pm.deletePlugin(listPluginRepo[randomIndex]);
+            listPluginRepo = pm.getLatestPluginRepo();
         break;
     }
     
