@@ -2,9 +2,15 @@
 
 This is a Lortom Package Manager and allows to manage all package of Lortom CMS.
 
-
+- [API](#api)
 - [Install Plugin](#install-plugin)
+- [Uninstall Plugin](#uninstall-plugin)
+- [Packing Plugin](#packing-plugin)
+- [Delete Plugin](#delete-plugin-from-repo)
 
+
+
+## API 
 The `PluginManger` have this API method:
 
 ```typescript
@@ -126,3 +132,79 @@ this.listOfInstalled.forEach((pl)=>{
     });
 this.listOfInstalled = pm.getListPluginInstalled();
 ```
+
+## Packing Plugin
+
+this is an example to packing a plugin
+
+```typescript
+import * as path from 'path';
+import {PluginManger} from 'lt-pm';
+
+const cwd = path.resolve(__dirname+'/../test/plugins');      // <- Folder to take the Plugins Source
+const compr = path.resolve(__dirname+'/../test/compressed'); // <- Folder to put Compressed plugin
+const depl = path.resolve(__dirname+'/../test/toDeploy');    // <- Folder to Decompress Plugin
+
+const pm = new PluginManager(compr,cwd,depl);
+//this info passed by third party
+const listOfInstalled =[
+    new Plugin('namePlugin','vendor1','1.0.0'),
+    new Plugin('namePlugin2','vendor1','1.2.0');
+];
+
+// Passing to PluginManager the list of Installed Plugin
+pm.setListPluginInstalled(listOfInstalled);
+
+// Get the list of avaiable Plugin into the Repo
+let listPluginRepo = pm.getLatestPluginRepo();
+
+let listOfInstalled = pm.getListPluginInstalled();
+
+    listOfInstalled.forEach((plug) => {
+        if(!plug.compress) {
+            pm.packagePlugin(plug);
+        }
+    });
+```
+
+## Delete Plugin from Repo
+
+this is an example to delete a plugin from repo
+
+```typescript
+import * as path from 'path';
+import {PluginManger} from 'lt-pm';
+
+const cwd = path.resolve(__dirname+'/../test/plugins');      // <- Folder to take the Plugins Source
+const compr = path.resolve(__dirname+'/../test/compressed'); // <- Folder to put Compressed plugin
+const depl = path.resolve(__dirname+'/../test/toDeploy');    // <- Folder to Decompress Plugin
+
+const pm = new PluginManager(compr,cwd,depl);
+//this info passed by third party
+const listOfInstalled =[
+    new Plugin('namePlugin','vendor1','1.0.0'),
+    new Plugin('namePlugin2','vendor1','1.2.0');
+];
+
+// Passing to PluginManager the list of Installed Plugin
+pm.setListPluginInstalled(listOfInstalled);
+
+// Get the list of avaiable Plugin into the Repo
+let listPluginRepo = pm.getLatestPluginRepo();
+
+let randomIndex = Math.floor(Math.random() * listPluginRepo.length);
+pm.deletePlugin(listPluginRepo[randomIndex]);
+listPluginRepo = pm.getLatestPluginRepo();
+```
+
+
+# TODO LIST
+
+this is the List of Things To Do for the next time v 0.3.0
+- [ ] PluginManger
+    - [ ] Update Plugin
+
+
+
+This feature will release on version 0.4.0
+- [ ] Template Manager
