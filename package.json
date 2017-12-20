@@ -3,6 +3,7 @@
   "version": "0.2.2",
   "license": "MIT",
   "description": "Questa è una prova per l'utilizzo di tar",
+  "main": "lt-pm.js",
   "author": {
     "name": "Hernan Ariel De Luca",
     "email": "hadeluca@gmail.com"
