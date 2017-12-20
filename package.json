@@ -2,8 +2,11 @@
   "name": "lt-pm",
   "version": "0.2.4",
   "license": "MIT",
-  "description": "Questa è una prova per l'utilizzo di tar",
+  "description": "This package manage all plugins and template into Lortom CMS",
   "main": "index.js",
+  "bin": 
+    {"ltpm": "lt.js"},
+  "preferGlobal": true,  
   "author": {
     "name": "Hernan Ariel De Luca",
     "email": "hadeluca@gmail.com"
