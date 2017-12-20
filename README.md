@@ -3,7 +3,7 @@
 This is a Lortom Package Manager and allows to manage all package of Lortom CMS.
 
 
-- [Install Plugin](#Install-Plugin)
+- [Install Plugin](#install-plugin)
 
 The `PluginManger` have this API method:
 
