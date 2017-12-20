@@ -1,12 +1,13 @@
 {
   "name": "lt-pm",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "license": "MIT",
   "description": "This package manage all plugins and template into Lortom CMS",
   "main": "index.js",
-  "bin": 
-    {"ltpm": "lt.js"},
-  "preferGlobal": true,  
+  "bin": {
+    "ltpm": "lt.js"
+  },
+  "preferGlobal": true,
   "author": {
     "name": "Hernan Ariel De Luca",
     "email": "hadeluca@gmail.com"
