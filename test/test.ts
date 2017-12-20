@@ -1,5 +1,4 @@
 import * as path from 'path'; 
-import * as fs from 'fs';
 import {Plugin} from '../src/lib/Plugin';
 import {PluginManager} from '../src/lib/PluginManager';
 
