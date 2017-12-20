@@ -1,2 +1,2 @@
-export {Plugin} from './lib';
-export {PluginManager} from './lib';
+export {Plugin} from './lib/Plugin';
+export {PluginManager} from './lib/PluginManager';
