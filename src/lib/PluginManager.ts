@@ -24,7 +24,7 @@ export class PluginManager {
      * @param listOfInfo Plugin[]
      * @return Plugin[]
      */
-    getLatestPluginRepo(installedPlugins : Plugin[] = []): Plugin[] {
+    public getLatestPluginRepo(): Plugin[] {
 
         // if latest plugin repo is not undefined
         if(this._latestPluginRepo == undefined || this._latestPluginRepo.length == 0) {
@@ -32,10 +32,8 @@ export class PluginManager {
         }
 
         // check if installed Plugin list 
-        if(installedPlugins.length != 0) {
-            this.setListPluginInstalled(installedPlugins);
-            this.checkIfPluginsRepoInstalled(installedPlugins);
-            
+        if(this._listOfPluginInstalled.length != 0) {
+            this.checkIfPluginsRepoInstalled(this._listOfPluginInstalled);
         }
 
        return this._latestPluginRepo;
@@ -45,7 +43,7 @@ export class PluginManager {
      * This function return all Plugin Installed into CMS
      * @returns Plugin[]
      */
-    getListPluginInstalled(): Plugin[] {
+    public getListPluginInstalled(): Plugin[] {
         return this._listOfPluginInstalled;
     }
 
@@ -53,64 +51,33 @@ export class PluginManager {
      * This function set installed Plugin into CMS
      * @param installedPlugin Plugin[]
      */
-    setListPluginInstalled(installedPlugin: Plugin[]) {
+    public setListPluginInstalled(installedPlugin: Plugin[]) {
+        installedPlugin.forEach((plug) => {
+            plug.packed = this.checkPluginIsPacked(plug);
+        });
         this._listOfPluginInstalled = installedPlugin;
     }
 
     /**
-     * This function populate list of Plugin
-     * @return Plugin[]
+     * Install the Plugin from Folder compressed
+     * @param plugin Plugin
      */
-    protected populateList(): Plugin[] {
-         //return Arrya from Folder
-       let tempArray: Plugin[] = this.getArrayFromFolder();
+    public installPlugin(plugin: Plugin){
+        plugin.decompress(this.depl,this.repo);
 
-       // clone the array of Plugin
-      let secondTempArray = tempArray.slice();
+        this._listOfPluginInstalled.push(plugin);
+        let index = this._latestPluginRepo.indexOf(plugin);
 
-      //Check for the Latest version
-      for(let i = 0; i<tempArray.length; i++)
-      {
-          let item = tempArray[i];
-          let number = i+1;
-      
-          if(number<tempArray.length)
-          {
-               for(number; number< tempArray.length; number++)
-               {
-                   let item2 = tempArray[number];
-      
-                   if(item2.vendor === item.vendor && item2.name === item.name)
-                   {
-                       this.compare(item,item2,secondTempArray);
-                   }
-               }
-          }
-      }
-      
-      return secondTempArray; 
-    }
-
-    /**
-     * This function check if Plugins are installed
-     * @param arrayInfo 
-     */
-    protected checkIfPluginsRepoInstalled(arrayInfo: Plugin[]): void {
-
-        this._latestPluginRepo.forEach((item) => {
-            arrayInfo.forEach((it => {
-                if(it.name === item.name && it.vendor === item.vendor && it.version === item.version) {
-                    item.installed = true;
-                }
-            }))
-        });
+        if(index>-1) {
+            this._latestPluginRepo[index].installed = true;
+        }
     }
 
     /**
      * Only erase Plugins Folder and maintain the compressedFile
      * @param plugin Plugin
      */
-    uninstallPlugin(plugin: Plugin){
+    public uninstallPlugin(plugin: Plugin){
         const dirPlug = this.depl+'/'+plugin.vendor+'/'+plugin.name;
 
         if(fs.existsSync(dirPlug)){
@@ -144,6 +111,106 @@ export class PluginManager {
             this._latestPluginRepo[indexRepo].installed = false;
         }
     }
+
+    /**
+     * Compress the Plugin into folder compressed
+     * @param plugin Plugin
+     */
+    public packagePlugin(plugin: Plugin) {
+        
+        if(!fs.existsSync(this.repo))
+        {
+            fs.mkdirSync(this.repo);
+        }
+        plugin.cwd = this.cwd;
+        plugin.dirName = plugin.vendor+'/'+plugin.name;
+        plugin.compress(this.repo);
+
+        let indexInstall = this._listOfPluginInstalled.indexOf(plugin);
+        if(indexInstall > -1) {
+           this._listOfPluginInstalled[indexInstall].packed = true;
+        }
+    }
+
+    /**
+     * Erase the compressed file
+     * @param plugin Plugin
+     */
+    public deletePlugin(plugin: Plugin) {
+        // check if in installed plugin exist
+        let indexIns = this._listOfPluginInstalled.indexOf(plugin);
+        if(indexIns > -1) {
+            this._listOfPluginInstalled[indexIns].packed = false;
+        }
+        //erase the compressed file
+        let pathFile = this.repo+'/'+plugin.getPathToCompress();
+
+        if(fs.existsSync(pathFile)) {
+            fs.unlinkSync(pathFile);
+            this._latestPluginRepo = [];
+            this.getLatestPluginRepo();
+        }
+    }
+
+    /**
+     * This function update Plugin
+     * @param pluginOld Plugin
+     * @param pluginNew Plugin
+     */
+    public updatePlugin(pluginOld: Plugin, pluginNew: Plugin) {
+        //TODO
+    }
+
+
+    /**
+     * This function check if Plugins are installed
+     * @param arrayInfo 
+     */
+    protected checkIfPluginsRepoInstalled(arrayInfo: Plugin[]): void {
+
+        this._latestPluginRepo.forEach((item) => {
+            arrayInfo.forEach((it => {
+                if(it.name === item.name && it.vendor === item.vendor && it.version === item.version) {
+                    item.installed = true;
+                }
+            }))
+        });
+    }
+
+    /**
+     * This function populate list of Plugin
+     * @return Plugin[]
+     */
+    protected populateList(): Plugin[] {
+        //return Arrya from Folder
+      let tempArray: Plugin[] = this.getArrayFromFolder();
+
+      // clone the array of Plugin
+     let secondTempArray = tempArray.slice();
+
+     //Check for the Latest version
+     for(let i = 0; i<tempArray.length; i++)
+     {
+         let item = tempArray[i];
+         let number = i+1;
+     
+         if(number<tempArray.length)
+         {
+              for(number; number< tempArray.length; number++)
+              {
+                  let item2 = tempArray[number];
+     
+                  if(item2.vendor === item.vendor && item2.name === item.name)
+                  {
+                      this.compare(item,item2,secondTempArray);
+                  }
+              }
+         }
+     }
+     
+     return secondTempArray; 
+   }
+
     /**
      * This Function
      * @param dirPath string
@@ -164,95 +231,18 @@ export class PluginManager {
         );
         fs.rmdirSync(dirPath);
     }
-
+   
     /**
-     * Install the Plugin from Folder compressed
+     * This function check if Plugin is Packed or Not
      * @param plugin Plugin
      */
-    installPlugin(plugin: Plugin){
-        plugin.decompress(this.depl,this.repo);
-
-        this._listOfPluginInstalled.push(plugin);
-        let index = this._latestPluginRepo.indexOf(plugin);
-
-        if(index>-1) {
-            this._latestPluginRepo[index].installed = true;
-        }
-    }
-
-    /**
-     * Compress the Plugin into folder compressed
-     * @param plugin Plugin
-     */
-    packagePlugin(plugin: Plugin) {
-        
-        if(!fs.existsSync(this.repo))
-        {
-            fs.mkdirSync(this.repo);
-        }
-        plugin.cwd = this.cwd;
-        plugin.dirName = plugin.vendor+'/'+plugin.name;
-        plugin.compress(this.repo);
-
-        let indexInstall = this._listOfPluginInstalled.indexOf(plugin);
-        if(indexInstall > -1) {
-           this._listOfPluginInstalled[indexInstall].packed = true;
-        }
-    }
-
-    /**
-     * Erase the compressed file
-     * @param plugin Plugin
-     */
-    deletePlugin(plugin: Plugin) {
-        //TODO
-    }
-
-    /**
-     * This function update Plugin
-     * @param pluginOld Plugin
-     * @param pluginNew Plugin
-     */
-    updatePlugin(pluginOld: Plugin, pluginNew: Plugin) {
-        //TODO
-    }
-
-    /**
-     * This function return Info of all Plugin Installed
-     * @returns {vendor: string, name: string}[]
-     * @deprecated
-     */
-    getPluginInstalled(): {vendor: string, name: string}[] {
-        let arrayPlug = fs.readdirSync(this.depl);
-        let returnArray: {vendor: string, name: string}[] = [];
-
-        if(arrayPlug.length > 0) {
-            arrayPlug.forEach(
-                (vendorPl)  => {
-                    const statF = fs.statSync(vendorPl);
-                    if(statF.isDirectory) {
-                        const dirPath = this.depl+'/'+vendorPl;
-                        const arrayName = fs.readdirSync(dirPath);
-                        if(arrayName.length > 0 ) {
-                            arrayName.forEach(
-                                (namePlug) => {
-                                    returnArray.push({vendor: vendorPl, name: namePlug});
-                                }
-                            );
-                        }
-                    }
-                }
-            );
-        }
-        return returnArray;
-    }
-
     protected checkPluginIsPacked(plugin: Plugin) {
         return fs.existsSync(this.repo+'/'+plugin.getPathToCompress());
     }
 
     /**
      * This function return array from specific folder
+     * @return Plugin[]
      */
     protected getArrayFromFolder(): Plugin[] {
         let arrayFile: Plugin[] = [];
