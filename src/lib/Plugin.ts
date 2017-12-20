@@ -13,12 +13,14 @@ export class Plugin {
     minor: string;
     patch: string;
     installed: boolean;
+    packed: boolean;
 
     constructor(_name?: string, _vendor?: string, _version?: string) {
         this._name = ( _name != undefined) ? _name : '';
         this._vendor = ( _vendor != undefined) ? _vendor : '';
         this._version = ( _version != undefined) ? _version : '';
         this.installed = false;
+        this.packed = true;
         this.splitVersion();
     }
 
@@ -128,8 +130,8 @@ export class Plugin {
      */
     decompress(folderTo: string,folderFrom: string): void {
 
-        const fileToDecompress = folderFrom+this.getPathToCompress();
-        fs.createReadStream(this.getPathToCompress()).pipe(
+        const fileToDecompress = folderFrom+'/'+this.getPathToCompress();
+        fs.createReadStream(fileToDecompress).pipe(
             tar.x({
                 C: folderTo
             })

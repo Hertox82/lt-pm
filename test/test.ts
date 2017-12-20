@@ -41,9 +41,8 @@ if(!plManager) {
 } else {
     const pm = new PluginManager(compr,cwd,depl);
     //this info passed by third party
-    const listOfInfo =[];
-    console.log(listOfInfo);
-    const listPluginRepo = pm.getListOfLatestPlugin(listOfInfo);
+    const listOfInstalled =[];
+    const listPluginRepo = pm.getLatestPluginRepo(listOfInstalled);
     const action = Action.Nothing;
 
     switch(+action) {
@@ -51,13 +50,12 @@ if(!plManager) {
         break;
 
         case Action.Uninstall: 
-        if(listPluginRepo[0].installed) {
-            pm.uninstallPlugin(listPluginRepo[0]);
-        }
-    
-        if(listPluginRepo[1].installed) {
-            pm.uninstallPlugin(listPluginRepo[1]);
-        }
+            this.listOfInstalled.forEach((pl)=>{
+                if(pl.installed){
+                    pm.uninstallPlugin(pl);
+                }
+            });
+            this.listOfInstalled = pm.getListPluginInstalled();
         break;
 
         case Action.Install: 
@@ -65,13 +63,14 @@ if(!plManager) {
                 (plugin) => {
                     if(!plugin.installed) {
                         pm.installPlugin(plugin);
+                        plugin.installed = true;
                     }
                 }
             );
         break;
 
         case Action.Package: 
-
+            
         break;
 
         case Action.Delete: 
