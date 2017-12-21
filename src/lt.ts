@@ -194,4 +194,11 @@ program
 }
 });
 
+program
+.command('test')
+.description('this command is only for testing process.cwd()')
+.action(()=>{
+  log(chalk.default.blueBright.bold(process.cwd()));
+})
+
 program.parse(process.argv);
