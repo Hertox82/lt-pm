@@ -2,15 +2,100 @@
 
 This is a Lortom Package Manager and allows to manage all package of Lortom CMS.
 
+install this package globally:
+
+```bash
+npm install -g lt-pm
+```
+
+- [CLI](#cli)
 - [API](#api)
 - [Install Plugin](#install-plugin)
 - [Uninstall Plugin](#uninstall-plugin)
 - [Packing Plugin](#packing-plugin)
 - [Delete Plugin](#delete-plugin-from-repo)
 
+## CLI
+
+Actually there is a CLI that pack, delete pack, install and uninstall a Plugin
+
+```bash
+ Usage: ltpm [options] [command]
 
 
-## API 
+  Options:
+
+    -V, --version        output the version number
+    -c, --config <path>  pass the js in order to achieve the goal
+    -h, --help           output usage information
+
+
+  Commands:
+
+    package <pack>    this command is to package a plugin
+    delpack <pack>    this command is to delete package a plugin
+    install <pack>    this command is to install a plugin
+    uninstall <pack>  this command is to uninstall a plugin
+    test              this command is only for testing process.cwd()
+```
+
+## Configuration file
+
+In order to use the ltpm CLI you have two option:
+
+- Create file config.js
+- Create file ltpm.config.json
+
+### Create config.js
+
+```bash
+touch config.js
+```
+
+and this is an example of configuration file
+
+```javascript
+let path = require('path');
+
+let obj = {
+    cwd: path.resolve(__dirname,"./plugins"),     // <- Folder to take the Plugins Source
+    repo: path.resolve(__dirname,"./compressed"), // <- Folder to put Compressed Plugin
+    depl: path.resolve(__dirname,"./toDeploy")    // <- Folder to Decompress Plugin
+}
+
+console.log(JSON.stringify(obj));
+```
+
+after this every time that you would use a CLI you must type:
+
+```bash
+ltpm -c path/where/is/located/file/config.js <command> <packeFileName>
+```
+
+### Create ltpm.config.json
+
+Creating this file the life is more easy!
+
+this is an example of configuration file
+
+```json
+{
+    "cwd" : "plugins",
+    "depl": "toDeploy",
+    "repo": "compressed"
+}
+```
+
+place this at the root folder (in case of Lortom CMS, you'll find this into the angular-backend folder).
+
+Now you can run the command in root folder without -c Option
+
+```bash
+ltpm <command> <packeFileName>
+```
+
+## API
+
 The `PluginManger` have this API method:
 
 ```typescript
@@ -197,7 +282,6 @@ pm.deletePlugin(listPluginRepo[randomIndex]);
 listPluginRepo = pm.getLatestPluginRepo();
 ```
 
-
 # TODO LIST
 
 this is the List of Things To Do for the next time v 0.3.0
@@ -206,8 +290,6 @@ this is the List of Things To Do for the next time v 0.3.0
 in version 0.4.0
 - [ ] PluginManger
     - [ ] Update Plugin
-
-
 
 This feature will release on version 0.5.0
 - [ ] Template Manager
