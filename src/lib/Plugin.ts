@@ -2,6 +2,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as tar from 'tar';
+import * as chalk from 'chalk';
 
 export class Plugin {
     protected _name: string;
@@ -102,6 +103,10 @@ export class Plugin {
     static createPluginFromFile(path: string) : Plugin {
 
         let multiPath = path.split('-',3);
+        if(multiPath.length != 3) {
+            console.error(chalk.default.red('the pack is not well formatted, please try again!'));
+            return null;
+        }
         const vendor = multiPath[0];
         const name = multiPath[1];
         let version = multiPath[2].replace('.tgz','');

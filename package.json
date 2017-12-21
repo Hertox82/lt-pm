@@ -31,6 +31,7 @@
     "typescript": "~2.3.3"
   },
   "dependencies": {
+    "chalk": "^2.3.0",
     "commander": "^2.12.2",
     "tar": "^4.1.1"
   }
