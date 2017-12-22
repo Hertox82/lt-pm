@@ -104,6 +104,10 @@ export class Plugin {
         return obj;
     }
 
+    /**
+     * This function serialize Plugin for File Config
+     * @returns {vendor: string, name: string, version: string}
+     */
     serializeForConfig(): any {
         let obj = {
             vendor: this._vendor,

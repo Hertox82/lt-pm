@@ -8,10 +8,27 @@ import { Plugin } from './lib/Plugin';
 import * as ltpr from './lib/config.interface';
 import * as process from 'process';
 import * as chalk from 'chalk';
+import { ConfigFile } from './lib/config.interface';
 
 const log = console.log;
 program
 .version('1.2.0')
+
+program
+.command('init')
+.description('this command initialize ltpm.config.json')
+.action(()=>{
+  const fileConfigPath = ltpr.cwd()+'/ltpm.config.json';
+  if(!ltpr.existFile(fileConfigPath)) {
+    let cf: ConfigFile = {
+      cwd: '',
+      repo: '',
+      depl: ''
+    };
+
+    ltpr.writeConfigJSON(fileConfigPath,cf);
+  }
+})
 
 /* Package Command */
 program
