@@ -14,6 +14,8 @@ npm install -g lt-pm
 - [Uninstall Plugin](#uninstall-plugin)
 - [Packing Plugin](#packing-plugin)
 - [Delete Plugin](#delete-plugin-from-repo)
+- [Change Log](#change-log)
+- [Todo list](#todo-list)
 
 ## CLI
 
@@ -25,70 +27,55 @@ Actually there is a CLI that pack, delete pack, install and uninstall a Plugin
 
   Options:
 
-    -V, --version        output the version number
-    -c, --config <path>  pass the js in order to achieve the goal
-    -h, --help           output usage information
+    -V, --version  output the version number
+    -h, --help     output usage information
 
 
   Commands:
 
+    init              this command initialize ltpm.config.json
     package <pack>    this command is to package a plugin
     delpack <pack>    this command is to delete package a plugin
     install <pack>    this command is to install a plugin
-    uninstall <pack>  this command is to uninstall a plugin
+    uninstall <pack>  this command is to install a plugin
+    latest            this command return all latest package inside of repo folder
     test              this command is only for testing process.cwd()
 ```
 
 ## Configuration file
 
-In order to use the ltpm CLI you have two option:
+In order to use the ltpm CLI you have to create a ltpm.config.json into the root folder:
 
-- Create file config.js
-- Create file ltpm.config.json
-
-### Create config.js
-
-```bash
-touch config.js
-```
-
-and this is an example of configuration file
-
-```javascript
-let path = require('path');
-
-let obj = {
-    cwd: path.resolve(__dirname,"./plugins"),     // <- Folder to take the Plugins Source
-    repo: path.resolve(__dirname,"./compressed"), // <- Folder to put Compressed Plugin
-    depl: path.resolve(__dirname,"./toDeploy")    // <- Folder to Decompress Plugin
-}
-
-console.log(JSON.stringify(obj));
-```
-
-after this every time that you would use a CLI you must type:
-
-```bash
-ltpm -c path/where/is/located/file/config.js <command> <packeFileName>
-```
 
 ### Create ltpm.config.json
 
-Creating this file the life is more easy!
+You type this command on root folder
 
-this is an example of configuration file
+```bash
+ltpm init
+```
+
+and the CLI provide for you to create the ltpm.config.json. The file will be empty like this:
 
 ```json
 {
-    "cwd" : "plugins",
-    "depl": "toDeploy",
-    "repo": "compressed"
+    "cwd" : "",
+    "depl": "",
+    "repo": ""
 }
 ```
 
-place this at the root folder (in case of Lortom CMS, you'll find this into the angular-backend folder).
+remember to fill the option:
 
-Now you can run the command in root folder without -c Option
+`cwd :` this is a folder where are located the source code for Plugin,
+
+`depl :` this is a folder where are located the deployed Plugin,
+
+`repo :` this is a folder where are located the compressed Plugin,
+
+`plugins :` When you will install a Plugin, in this place you can find the Config of that Plugin
+
+Now you able to type all command
 
 ```bash
 ltpm <command> <packeFileName>
@@ -148,6 +135,18 @@ The `PluginManger` have this API method:
          * @todo
          */
         public updatePlugin(pluginOld: Plugin, pluginNew: Plugin);
+
+        /**
+         * This function serialize Plugin
+         * @returns {vendor: string, name: string, version: string, installed: boolean, packed: boolean}
+         */
+        public serialize(): any ;
+
+        /**
+         * This function serialize Plugin for File Config
+         * @returns {vendor: string, name: string, version: string}
+         */
+        serializeForConfig(): any;
     }
 ```
 
@@ -282,14 +281,16 @@ pm.deletePlugin(listPluginRepo[randomIndex]);
 listPluginRepo = pm.getLatestPluginRepo();
 ```
 
-# TODO LIST
+## CHANGE LOG
 
-this is the List of Things To Do for the next time v 0.3.0
-- [x] CLI 
+**v 0.4.0**
 
-in version 0.4.0
-- [ ] PluginManger
-    - [ ] Update Plugin
+- Added new commands `latest` and `init`;
+- Removed the `.js` file for configuration file
+- Added function API for PluginManager `serializeLatestPluginRepo()`
 
-This feature will release on version 0.5.0
+## TODO LIST
+
+- [ ]  PluginManger
+  - [ ] Update Plugin
 - [ ] Template Manager
