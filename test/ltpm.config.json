@@ -1,5 +1,5 @@
 {
-    "cwd" : "plugins",
+    "cwd": "plugins",
     "depl": "toDeploy",
     "repo": "compressed"
 }

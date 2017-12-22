@@ -39,6 +39,22 @@ export class PluginManager {
        return this._latestPluginRepo;
     }
 
+
+    public serializeLatestPluginRepo(listInstalled?: any): string {
+
+        if(listInstalled != undefined || listInstalled != null) {
+            this.convertPluginCfToPlugin(listInstalled);
+        }
+        let listToSerialize = [];
+        this.getLatestPluginRepo().forEach(
+            (plugin) => {
+                listToSerialize.push(plugin.serialize());
+            }
+        );
+
+        return JSON.stringify(listToSerialize);
+    }
+
     /**
      * This function return all Plugin Installed into CMS
      * @returns Plugin[]
@@ -161,6 +177,11 @@ export class PluginManager {
         //TODO
     }
 
+    protected convertPluginCfToPlugin(list: any): void {
+        list.forEach(element => {
+            this._listOfPluginInstalled.push(new Plugin(element.name,element.vendor,element.version));
+        });
+    }
 
     /**
      * This function check if Plugins are installed

@@ -89,6 +89,31 @@ export class Plugin {
         this._version = theVersion;
     }
     /**
+     * This function serialize Plugin
+     * @returns string
+     */
+    serialize(): any {
+        let obj = {
+            vendor: this._vendor,
+            name: this._name,
+            version: this._version,
+            packed: this.packed,
+            installed: this.installed
+        };
+
+        return obj;
+    }
+
+    serializeForConfig(): any {
+        let obj = {
+            vendor: this._vendor,
+            name: this._name,
+            version: this._version
+        };
+
+        return obj;
+    }
+    /**
      * this function return a name of Plugin compressed
      */
     getPathToCompress(): string {

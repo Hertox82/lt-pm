@@ -43,10 +43,11 @@ if(!plManager) {
     const listOfInstalled =[];
     pm.setListPluginInstalled(listOfInstalled);
     let listPluginRepo = pm.getLatestPluginRepo();
-    const action = Action.Delete;
+    const action = Action.Nothing;
 
     switch(+action) {
         case Action.Nothing:
+            console.log(pm.serializeLatestPluginRepo());
         break;
 
         case Action.Uninstall: 
