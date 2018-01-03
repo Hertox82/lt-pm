@@ -102,15 +102,16 @@ export class PluginManager {
                 (item)=>{
                     const dirItem = dirPlug+'/'+item;
                     let stat = fs.statSync(dirItem);
-                    if(stat.isFile){
+                    if(stat.isFile()){
                         fs.unlinkSync(dirItem);
                     }
                     else if(stat.isDirectory){
                         this.eraseDirectory(dirItem);
                     }
                 });
+                fs.rmdirSync(dirPlug);
         }
-        fs.rmdirSync(dirPlug);
+        
 
         let folderVendor = fs.readdirSync(this.depl+'/'+plugin.vendor);
         if(folderVendor.length == 0) {
