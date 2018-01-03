@@ -283,6 +283,9 @@ listPluginRepo = pm.getLatestPluginRepo();
 
 ## CHANGE LOG
 
+**v 0.4.1**
+- Fixed bug on Uninstall command
+
 **v 0.4.0**
 
 - Added new commands `latest` and `init`;
