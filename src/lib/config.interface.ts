@@ -6,8 +6,11 @@ export interface ConfigFile {
     cwd: string,
     depl: string,
     repo: string,
+    deplt?: string,
+    cwdT?: string,
     template?: any,
     plugins?: any,
+
 }
 
 export function getConfigJSON(path: string): ConfigFile{
@@ -15,6 +18,12 @@ export function getConfigJSON(path: string): ConfigFile{
     cf.cwd = process.cwd()+'/'+cf.cwd;
     cf.repo = process.cwd()+'/'+cf.repo;
     cf.depl = process.cwd()+'/'+cf.depl;
+    if(cf.deplt != null || cf.deplt != undefined) {
+      cf.deplt = process.cwd()+'/'+cf.deplt;
+    }
+    if(cf.cwdT != null || cf.cwdT != undefined) {
+      cf.cwdT = process.cwd()+'/'+cf.cwdT;
+    }
     return cf as ConfigFile;
   }
   
@@ -22,6 +31,12 @@ export function getConfigJSON(path: string): ConfigFile{
     content.cwd = content.cwd.replace(process.cwd()+'/','');
     content.repo = content.repo.replace(process.cwd()+'/','');
     content.depl = content.depl.replace(process.cwd()+'/','');
+    if(content.deplt != null || content.deplt != undefined) {
+      content.deplt = content.deplt.replace(process.cwd()+'/','');
+    }
+    if(content.cwdT != null || content.cwdT != undefined) {
+      content.cwdT = content.cwdT.replace(process.cwd()+'/','');
+    }
     const cf = JSON.stringify(content,null,4);
     fs.writeFileSync(path,cf,'utf8');
   }

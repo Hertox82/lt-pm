@@ -9,6 +9,7 @@ import * as ltpr from './lib/config.interface';
 import * as process from 'process';
 import * as chalk from 'chalk';
 import { ConfigFile } from './lib/config.interface';
+import { Template } from './lib/Template';
 
 const log = console.log;
 program
@@ -139,6 +140,7 @@ program
   }
 
 });
+/* Latest Plugin */
 program
 .command('latest')
 .description('this command return all latest package inside of repo folder')
@@ -151,6 +153,126 @@ program
   } else {
     log('{"error": "configuration_file_not_found"}');
   }
+});
+/* Latest Template */
+program
+.command('latest-template')
+.description('this command return all latest template inside of repo folder')
+.action(() => {
+  const fileConfigPath = ltpr.cwd()+'/ltpm.config.json';
+  if(ltpr.existFile(fileConfigPath)) {
+    const cf = ltpr.getConfigJSON(fileConfigPath);
+    const pm = new PluginManager(cf.repo,cf.cwd,cf.depl);
+    if(cf.deplt != undefined || cf.deplt != null) {
+        pm.deplt = cf.deplt;
+        if(cf.cwdT != undefined || cf.cwdT != null) {
+          pm.cwdT = cf.cwdT;
+          log(pm.serializeLatestTemplateRepo());
+      }
+      else {
+        log(chalk.default.red('The work template directory isn\'t initialized, please write it into the config file '));
+      }
+    }
+    else {
+      log(chalk.default.red('The deploy template folder isn\'t initialized, please write it into the config file '));
+    }
+    
+  }
+});
+
+program
+.command('package-t <pack>')
+.description('this command is to package a template')
+.action((pack)=>{
+  log(chalk.default.green('initialize ltpm - Lortom Package Manager - '));
+  const fileConfigPath = ltpr.cwd()+'/ltpm.config.json';
+  if(ltpr.existFile(fileConfigPath)) {
+    // take info from file
+    log(chalk.default.yellow('reading configuration file ...'));
+    const cf = ltpr.getConfigJSON(fileConfigPath);
+    const pm = new PluginManager(cf.repo,cf.cwd,cf.depl);
+    if(cf.deplt != undefined || cf.deplt != null) {
+      pm.deplt = cf.deplt;
+        if(cf.cwdT != undefined || cf.cwdT != null) {
+          pm.cwdT = cf.cwdT;
+          const template1 = Template.createFromFile(pack);
+            if(template1) {
+              log(chalk.default.yellow('Compressing file into the folder'));
+              pm.packageTemplate(template1);
+              log(chalk.default.green('well done! Finish to pack your Plugin'));
+            } 
+        } else {
+            log(chalk.default.red('The work template directory isn\'t initialized, please write it into the config file '));
+          }
+    } else {
+    log(chalk.default.red('The deploy template folder isn\'t initialized, please write it into the config file '));
+    }
+  } else {
+    log(chalk.default.red('Sorry!, but i can\'t find the ltpm.config.json, please provide to write it'));
+  }
+});
+
+/*Delete Template Command */
+program
+.command('deltemp <pack>')
+.description('this command is to delete packed template')
+.action((pack)=>{
+  log(chalk.default.green('initialize ltpm - Lortom Package Manager - '));
+  const fileConfigPath = ltpr.cwd()+'/ltpm.config.json';
+  if(ltpr.existFile(fileConfigPath)) {
+    // take info from file
+    log(chalk.default.yellow('reading configuration file ...'));
+    const cf = ltpr.getConfigJSON(fileConfigPath);
+    const pm = new PluginManager(cf.repo,cf.cwd,cf.depl);
+    if(cf.deplt != undefined || cf.deplt != null) {
+        pm.deplt = cf.deplt;
+          if(cf.cwdT != undefined || cf.cwdT != null) {
+            pm.cwdT = cf.cwdT;
+            const template1 = Template.createFromFile(pack);
+              if(template1) {
+                log(chalk.default.yellow('Deleting package'));
+                pm.deleteTemplate(template1);
+                log(chalk.default.green('well done! Finish to delete your Template packed'));
+              } 
+          } else {
+              log(chalk.default.red('The work template directory isn\'t initialized, please write it into the config file '));
+            }
+    } else {
+    log(chalk.default.red('The deploy template folder isn\'t initialized, please write it into the config file '));
+    }
+  } else {
+    log(chalk.default.red('Sorry!, but i can\'t find the ltpm.config.json, please provide to write it'));
+  }
+});
+
+/* Install Plugin Commnad */
+program
+.command('install <pack>')
+.description('this command is to install a plugin')
+.action((pack)=>{
+  log(chalk.default.green('initialize ltpm - Lortom Package Manager - '));
+  const fileConfigPath = ltpr.cwd()+'/ltpm.config.json';
+  if(ltpr.existFile(fileConfigPath)) {
+    // take info from file
+    log(chalk.default.yellow('reading configuration file ...'));
+    const cf = ltpr.getConfigJSON(fileConfigPath);
+    const pm = new PluginManager(cf.repo,cf.cwd,cf.depl);
+    const plugin1 = Plugin.createPluginFromFile(pack);
+    if(plugin1) {
+      log(chalk.default.yellow('Installing Plugin ..'));
+      pm.installPlugin(plugin1);
+      if(cf.plugins == undefined || cf.plugins == null) {
+        cf.plugins = [];
+      }
+      cf.plugins.push(plugin1.serializeForConfig());
+      log(chalk.default.yellow('writing file config ...'));
+      ltpr.writeConfigJSON(fileConfigPath,cf);
+      log(chalk.default.green('well done! Finish to install the Plugin'));
+    }
+  } else {
+    log(chalk.default.red('Sorry!, but i can\'t find the ltpm.config.json, please provide to write it'));
+  }
+
 });
 
 program

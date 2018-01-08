@@ -1,22 +1,36 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Plugin } from './Plugin';
+import { Template } from './Template';
+import { AbstractPack } from './AbstractPack';
 
 export class PluginManager {
 
     repo: string;
     cwd: string;
+    cwdT?: string;
     depl: string;
+    deplt?: string;
     _latestPluginRepo: Plugin[];
     _listOfPluginInstalled: Plugin [];
+    _latestTemplateRepo: Template [];
+    _listOfTemplateInstalled: Template [];
 
-    constructor(repositoryPath: string,cwd: string,depl: string) {
+    constructor(repositoryPath: string,cwd: string,depl: string, deplt?: string, cwdT?: string) {
         // initialize all variable
         this.repo = repositoryPath;
         this.cwd = cwd;
         this.depl = depl;
+        if(deplt != null || deplt != undefined) {
+            this.deplt = deplt;
+        }
+        if(cwdT != null || cwdT != undefined) {
+            this.cwdT = cwdT;
+        }
         this._latestPluginRepo = [];
         this._listOfPluginInstalled = [];
+        this._latestTemplateRepo = [];
+        this._listOfTemplateInstalled = [];
     }
 
     /**
@@ -39,7 +53,37 @@ export class PluginManager {
        return this._latestPluginRepo;
     }
 
+    /**
+     * this function return the list of latest template
+     * @return Template [] 
+     */
+    public getLatestTemplateRepo(): Template[] {
 
+        if(this._latestTemplateRepo == undefined || this._latestTemplateRepo.length == 0) {
+            this._latestTemplateRepo = this.popListTemplate();
+        }
+        return  this._latestTemplateRepo;
+    }
+
+    /**
+     * this function return a list of latest template serialized
+     * @return string
+     */
+    public serializeLatestTemplateRepo(): string {
+        let listToSerialize = [];
+        this.getLatestTemplateRepo().forEach(
+            (item) => {
+                listToSerialize.push(item.serialize());
+            }
+        );
+        return JSON.stringify(listToSerialize);
+    }
+
+
+    /**
+     * This function serialize the list of latest plugin
+     * @param listInstalled 
+     */
     public serializeLatestPluginRepo(listInstalled?: any): string {
 
         if(listInstalled != undefined || listInstalled != null) {
@@ -87,6 +131,11 @@ export class PluginManager {
         if(index>-1) {
             this._latestPluginRepo[index].installed = true;
         }
+    }
+
+    public installTemplate(template: Template) {
+        template.decompress(this.depl,this.repo);
+        
     }
 
     /**
@@ -149,6 +198,21 @@ export class PluginManager {
         }
     }
 
+    public packageTemplate(template: Template) {
+        if(! fs.existsSync(this.repo)) {
+            fs.mkdirSync(this.repo);
+        }
+
+        template.cwd = this.cwdT;
+        template.dirName = template.vendor+'/'+template.name;
+        template.compress(this.repo);
+
+        let indexInstall = this._listOfTemplateInstalled.indexOf(template);
+        if(indexInstall > -1) {
+            this._listOfTemplateInstalled[indexInstall].packed = true;
+        }
+    }
+
     /**
      * Erase the compressed file
      * @param plugin Plugin
@@ -166,6 +230,24 @@ export class PluginManager {
             fs.unlinkSync(pathFile);
             this._latestPluginRepo = [];
             this.getLatestPluginRepo();
+        }
+    }
+
+    /**
+     * this function erase compressed file
+     * @param template 
+     */
+    public deleteTemplate(template: Template) {
+        let indexIns = this._listOfTemplateInstalled.indexOf(template);
+        if(indexIns > -1) {
+            this._listOfTemplateInstalled[indexIns].packed = false;
+        }
+        let pathFile = this.repo+'/'+template.getPathToCompress();
+
+        if(fs.existsSync(pathFile)) {
+            fs.unlinkSync(pathFile);
+            this._latestTemplateRepo = [];
+            this.getLatestTemplateRepo();
         }
     }
 
@@ -211,26 +293,53 @@ export class PluginManager {
      let secondTempArray = tempArray.slice();
 
      //Check for the Latest version
-     for(let i = 0; i<tempArray.length; i++)
-     {
-         let item = tempArray[i];
-         let number = i+1;
      
-         if(number<tempArray.length)
-         {
-              for(number; number< tempArray.length; number++)
-              {
-                  let item2 = tempArray[number];
-     
-                  if(item2.vendor === item.vendor && item2.name === item.name)
-                  {
-                      this.compare(item,item2,secondTempArray);
-                  }
-              }
-         }
-     }
-     
-     return secondTempArray; 
+     return this.iterateTempArray(tempArray,secondTempArray); 
+   }
+
+   /**
+    * This function need to compare differents array
+    * @param tempArray1 
+    * @param tempArray2 
+    * @return AbstractPack[] 
+    */
+   protected iterateTempArray(tempArray1: AbstractPack[], tempArray2: AbstractPack[]): any[] {
+    
+    for(let i = 0; i<tempArray1.length; i++)
+    {
+        let item = tempArray1[i];
+        let number = i+1;
+    
+        if(number<tempArray1.length)
+        {
+             for(number; number< tempArray1.length; number++)
+             {
+                 let item2 = tempArray1[number];
+    
+                 if(item2.vendor === item.vendor && item2.name === item.name)
+                 {
+                     this.compare(item,item2,tempArray2);
+                 }
+             }
+        }
+    }
+    
+    return tempArray2; 
+   }
+
+   /**
+    * this function populate List of latest Template
+    * @return Template[]
+    */
+   protected popListTemplate(): Template [] {
+      //return Arrya from Folder
+      let tempArray: Template[] = this.getArrayTempFromFolder();
+
+      // clone the array of Plugin
+      let secondTempArray = tempArray.slice();
+    
+      //Check for the Latest version
+      return this.iterateTempArray(tempArray,secondTempArray); 
    }
 
     /**
@@ -286,13 +395,34 @@ export class PluginManager {
         return arrayFile;
     }
 
+    protected getArrayTempFromFolder() : Template[] {
+        let arrayFile: Template[] = [];
+        //read the folder, and store the Array of File
+        let file = fs.readdirSync(this.repo);
+        //iterate over array and Save into the temp Array a list Of Plugins
+        file.forEach(
+            (item) => {
+                if(item != '.DS_Store') {
+                    let obj = Template.createFromFile(item);
+
+                    if(obj) {
+                        arrayFile.push(obj);
+                    }
+                } else {
+                    fs.unlinkSync(this.repo+'/'+item);
+                }
+            }
+        );
+        return arrayFile;
+    }
+
     /**
      * This function compare two Plugin
      * @param a 
      * @param b 
      * @param array 
      */
-    protected compare (a: Plugin, b: Plugin, array: Plugin[]): void
+    protected compare (a: AbstractPack, b: AbstractPack, array: AbstractPack[]): void
     {
         if(a.major === b.major) {
             if(a.minor === b.minor)
@@ -327,7 +457,7 @@ export class PluginManager {
      * @param item 
      * @param array 
      */
-    protected removeItem(item: Plugin, array: Plugin[]) {
+    protected removeItem(item: AbstractPack, array: AbstractPack[]) {
         let index = array.indexOf(item);
         
             if (index> -1) {
