@@ -109,7 +109,7 @@ program
 /* Uninstall Plugin Command */
 program
 .command('uninstall <pack>')
-.description('this command is to install a plugin')
+.description('this command is to uninstall a plugin')
 .action((pack)=>{
   log(chalk.default.green('initialize ltpm - Lortom Package Manager - '));
   const fileConfigPath = ltpr.cwd()+'/ltpm.config.json';
@@ -245,10 +245,10 @@ program
   }
 });
 
-/* Install Plugin Commnad */
+/* Install Template Command */
 program
-.command('install <pack>')
-.description('this command is to install a plugin')
+.command('install-t <pack>')
+.description('this command is to install a template')
 .action((pack)=>{
   log(chalk.default.green('initialize ltpm - Lortom Package Manager - '));
   const fileConfigPath = ltpr.cwd()+'/ltpm.config.json';
@@ -257,17 +257,65 @@ program
     log(chalk.default.yellow('reading configuration file ...'));
     const cf = ltpr.getConfigJSON(fileConfigPath);
     const pm = new PluginManager(cf.repo,cf.cwd,cf.depl);
-    const plugin1 = Plugin.createPluginFromFile(pack);
-    if(plugin1) {
-      log(chalk.default.yellow('Installing Plugin ..'));
-      pm.installPlugin(plugin1);
-      if(cf.plugins == undefined || cf.plugins == null) {
-        cf.plugins = [];
-      }
-      cf.plugins.push(plugin1.serializeForConfig());
-      log(chalk.default.yellow('writing file config ...'));
-      ltpr.writeConfigJSON(fileConfigPath,cf);
-      log(chalk.default.green('well done! Finish to install the Plugin'));
+    if(cf.deplt != undefined || cf.deplt != null) {
+      pm.deplt = cf.deplt;
+        if(cf.cwdT != undefined || cf.cwdT != null) {
+          pm.cwdT = cf.cwdT;
+          const template1 = Template.createFromFile(pack);
+            if(template1) {
+              log(chalk.default.yellow('Installing Template'));
+              pm.installTemplate(template1);
+              if(cf.template == undefined || cf.template == null) {
+               cf.template = template1.serialize();
+              }
+              log(chalk.default.yellow('writing file config ...'));
+               ltpr.writeConfigJSON(fileConfigPath,cf);
+               log(chalk.default.green('well done! Finish to install the Template'));
+            } 
+        } else {
+            log(chalk.default.red('The work template directory isn\'t initialized, please write it into the config file '));
+          }
+    } else {
+    log(chalk.default.red('The deploy template folder isn\'t initialized, please write it into the config file '));
+    }
+  } else {
+    log(chalk.default.red('Sorry!, but i can\'t find the ltpm.config.json, please provide to write it'));
+  }
+
+});
+
+/* Uninstall Plugin Command  Per ora è da cambiare */
+program
+.command('uninstall-t <pack>')
+.description('this command is to uninstall a template')
+.action((pack)=>{
+  log(chalk.default.green('initialize ltpm - Lortom Package Manager - '));
+  const fileConfigPath = ltpr.cwd()+'/ltpm.config.json';
+  if(ltpr.existFile(fileConfigPath)) {
+    // take info from file
+    log(chalk.default.yellow('reading configuration file ...'));
+    let cf = ltpr.getConfigJSON(fileConfigPath);
+    const pm = new PluginManager(cf.repo,cf.cwd,cf.depl);
+    if(cf.deplt != undefined || cf.deplt != null) {
+      pm.deplt = cf.deplt;
+        if(cf.cwdT != undefined || cf.cwdT != null) {
+          pm.cwdT = cf.cwdT;
+          const template1 = Template.createFromFile(pack);
+            if(template1) {
+              log(chalk.default.yellow('Uninstalling Template ..'));
+              pm.uninstallTemplate(template1);
+              if(cf.template != undefined || cf.template != null) {
+               delete cf.template;
+              }
+              log(chalk.default.yellow('writing file config ...'));
+               ltpr.writeConfigJSON(fileConfigPath,cf);
+               log(chalk.default.green('well done! Finish to uninstall the Template'));
+            } 
+        } else {
+            log(chalk.default.red('The work template directory isn\'t initialized, please write it into the config file '));
+          }
+    } else {
+    log(chalk.default.red('The deploy template folder isn\'t initialized, please write it into the config file '));
     }
   } else {
     log(chalk.default.red('Sorry!, but i can\'t find the ltpm.config.json, please provide to write it'));

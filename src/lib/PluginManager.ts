@@ -133,9 +133,19 @@ export class PluginManager {
         }
     }
 
+    /**
+     * This Install the Template from folder compressed
+     * @param template 
+     */
     public installTemplate(template: Template) {
-        template.decompress(this.depl,this.repo);
+        template.decompress(this.deplt,this.repo);
         
+        this._listOfTemplateInstalled.push(template);
+        let index = this._latestTemplateRepo.indexOf(template);
+
+        if(index > -1 ) {
+            this._latestTemplateRepo[index].installed = true;
+        } 
     }
 
     /**
@@ -175,6 +185,42 @@ export class PluginManager {
         //if index exist, put the plugin installed to false
         if(indexRepo > -1) {
             this._latestPluginRepo[indexRepo].installed = false;
+        }
+    }
+
+    public uninstallTemplate(template: Template) {
+        const dirPlug = this.deplt+'/'+template.vendor+'/'+template.name;
+
+        if(fs.existsSync(dirPlug)){
+            let folderArray = fs.readdirSync(dirPlug);
+            folderArray.forEach(
+                (item)=>{
+                    const dirItem = dirPlug+'/'+item;
+                    let stat = fs.statSync(dirItem);
+                    if(stat.isFile()){
+                        fs.unlinkSync(dirItem);
+                    }
+                    else if(stat.isDirectory){
+                        this.eraseDirectory(dirItem);
+                    }
+                });
+                fs.rmdirSync(dirPlug);
+        }
+        
+
+        let folderVendor = fs.readdirSync(this.deplt+'/'+template.vendor);
+        if(folderVendor.length == 0) {
+            fs.rmdirSync(this.deplt+'/'+template.vendor);
+        }
+        //remove plugin into list of plugin installed
+        this.removeItem(template,this._listOfTemplateInstalled);
+
+        //find index into the list of plugin repo
+        let indexRepo = this._latestTemplateRepo.indexOf(template);
+
+        //if index exist, put the plugin installed to false
+        if(indexRepo > -1) {
+            this._latestTemplateRepo[indexRepo].installed = false;
         }
     }
 

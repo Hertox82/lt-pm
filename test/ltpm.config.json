@@ -1,7 +1,14 @@
 {
-    "cwd"   :  "plugins",
-    "depl"  : "toDeploy",
-    "repo"  : "compressed",
-    "deplt" : "deployTemplate",
-    "cwdT"  : "template"
+    "cwd": "plugins",
+    "depl": "toDeploy",
+    "repo": "compressed",
+    "deplt": "deployTemplate",
+    "cwdT": "template",
+    "plugins": [
+        {
+            "vendor": "",
+            "name": "",
+            "version": ""
+        }
+    ]
 }

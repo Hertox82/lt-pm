@@ -7,6 +7,8 @@ import * as path from 'path';
 export class Template extends AbstractPack{
  
     packed: boolean = false;
+    installed: boolean = false;
+    
     static createFromFile(path: string) {
         let regex =/_t/g ;
 
@@ -60,6 +62,10 @@ export class Template extends AbstractPack{
                 C: folderTo
             })
         );
+    }
+
+    installTemplate() {
+
     }
 
     serialize() {
