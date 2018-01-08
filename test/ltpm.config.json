@@ -1,5 +1,7 @@
 {
-    "cwd": "plugins",
-    "depl": "toDeploy",
-    "repo": "compressed"
+    "cwd"   :  "plugins",
+    "depl"  : "toDeploy",
+    "repo"  : "compressed",
+    "deplt" : "deployTemplate",
+    "cwdT"  : "template"
 }
