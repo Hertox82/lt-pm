@@ -7,7 +7,16 @@ Please read the [documentation](https://github.com/Hertox82/lt-pm/wiki)
 
 ## CHANGE LOG
 
+**v 1.0.0**
+
+- Change class from PluginManager to PackageManager
+- Implemented command to install Template
+- Implemented command to uninstall Template
+- Implemented command to package Template
+- Implemented command to delete package of Template
+
 **v 0.4.1**
+
 - Fixed bug on Uninstall command
 
 **v 0.4.0**
