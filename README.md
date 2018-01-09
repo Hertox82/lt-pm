@@ -18,6 +18,7 @@ Please read the [documentation](https://github.com/Hertox82/lt-pm/wiki)
 
 ## TODO LIST
 
+- [x] Template Manager
 - [ ]  PluginManger
   - [ ] Update Plugin
-- [ ] Template Manager
+
