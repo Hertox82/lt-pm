@@ -4,7 +4,7 @@ import { Plugin } from './Plugin';
 import { Template } from './Template';
 import { AbstractPack } from './AbstractPack';
 
-export class PluginManager {
+export class PackageManager {
 
     repo: string;
     cwd: string;
@@ -108,6 +108,14 @@ export class PluginManager {
     }
 
     /**
+     * This function return all Template Installed into CMS
+     * @returns Template[]
+     */
+    public getListTemplateInstalled(): Template[] {
+        return this._listOfTemplateInstalled;
+    }
+
+    /**
      * This function set installed Plugin into CMS
      * @param installedPlugin Plugin[]
      */
@@ -116,6 +124,19 @@ export class PluginManager {
             plug.packed = this.checkPluginIsPacked(plug);
         });
         this._listOfPluginInstalled = installedPlugin;
+    }
+
+    /**
+     * This function set installed Template into CMS
+     * @param installedTemplate Template[]
+     */
+    public setListTemplateInstalled(installedTemplate: Template[]) {
+        installedTemplate.forEach(
+            (temp) => {
+                temp.packed = this.checkTemplateIsPacked(temp);
+            }
+        );
+        this._listOfTemplateInstalled = installedTemplate;
     }
 
     /**
@@ -188,6 +209,10 @@ export class PluginManager {
         }
     }
 
+    /**
+     * Only erase Template Folder and maintain the compressedFile
+     * @param template Template
+     */
     public uninstallTemplate(template: Template) {
         const dirPlug = this.deplt+'/'+template.vendor+'/'+template.name;
 
@@ -244,6 +269,10 @@ export class PluginManager {
         }
     }
 
+    /**
+     * This compress the Template into the .tgz file
+     * @param template Template
+     */
     public packageTemplate(template: Template) {
         if(! fs.existsSync(this.repo)) {
             fs.mkdirSync(this.repo);
@@ -281,7 +310,7 @@ export class PluginManager {
 
     /**
      * this function erase compressed file
-     * @param template 
+     * @param template Template
      */
     public deleteTemplate(template: Template) {
         let indexIns = this._listOfTemplateInstalled.indexOf(template);
@@ -418,6 +447,14 @@ export class PluginManager {
     }
 
     /**
+     * This function check if Plugin is Packed or Not
+     * @param template Template
+     */
+    protected checkTemplateIsPacked(template: Template) {
+        return fs.existsSync(this.repo+'/'+template.getPathToCompress());
+    }
+
+    /**
      * This function return array from specific folder
      * @return Plugin[]
      */
@@ -429,7 +466,7 @@ export class PluginManager {
         file.forEach(
             (item) => {
                 if(item != '.DS_Store') {
-                    let obj = Plugin.createPluginFromFile(item);
+                    let obj = Plugin.createFromFile(item);
                     obj.packed = true;
                     arrayFile.push(obj);
                 } else {

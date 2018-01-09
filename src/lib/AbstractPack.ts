@@ -1,6 +1,9 @@
 
+import * as fs from 'fs';
+import * as path from 'path';
+import * as tar from 'tar';
 
-export class AbstractPack {
+export abstract class AbstractPack {
     protected _name: string;
     protected _vendor: string;
     protected _version: string;
@@ -10,6 +13,9 @@ export class AbstractPack {
     major: string;
     minor: string;
     patch: string;
+
+    installed: boolean;
+    packed: boolean;
     
     constructor(vendor?: string, name?: string, version?: string) {
         this._name = ( name != undefined) ? name : '';
@@ -108,5 +114,57 @@ export class AbstractPack {
             this.minor = '';
             this.patch = '';
         }
+    }
+
+    abstract getPathToCompress(): string;
+
+    static createFromFile(path: string): AbstractPack {
+        console.log('to implement, this is abstract method');
+        return null;
+    }
+
+     /**
+     * This function compress the Plugin
+     */
+    compress(destPath: string): void {
+        const fileName = this.getPathToCompress();
+
+        const pathToSave = destPath+'/'+fileName;
+        tar.create({
+            gzip: true,
+            C: this.cwd
+        },[this.dirName]).pipe(fs.createWriteStream(pathToSave));
+    }
+
+
+    /**
+     * This function decompress the Plugin into Specific folder
+     * @param folderTo 
+     * @param folderFrom 
+     */
+    decompress(folderTo: string,folderFrom: string): void {
+
+        const fileToDecompress = folderFrom+'/'+this.getPathToCompress();
+        fs.createReadStream(fileToDecompress).pipe(
+            tar.x({
+                C: folderTo
+            })
+        );
+    }
+
+    /**
+     * This function serialize Plugin
+     * @returns string
+     */
+    serialize(): any {
+        let obj = {
+            vendor: this._vendor,
+            name: this._name,
+            version: this._version,
+            packed: this.packed,
+            installed: this.installed
+        };
+
+        return obj;
     }
 }

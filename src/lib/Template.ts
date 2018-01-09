@@ -5,11 +5,12 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 export class Template extends AbstractPack{
- 
-    packed: boolean = false;
-    installed: boolean = false;
     
-    static createFromFile(path: string) {
+    /**
+     * This method instantiate a Template from a filename
+     * @param path string
+     */
+    static createFromFile(path: string): Template {
         let regex =/_t/g ;
 
         if(regex.test(path)) {
@@ -24,48 +25,15 @@ export class Template extends AbstractPack{
 
             return new Template(vendor,name,version);
         }
-
         return null;
     }
 
     /**
      * this function return a name of Plugin compressed
+     * @returns string
      */
     public getPathToCompress(): string {
         return this._vendor+'-'+this.name+'-'+this._version+'_t.tgz';
-    }
-
-    /**
-     * This function compress the Plugin
-     */
-    compress(destPath: string): void {
-        const fileName = this.getPathToCompress();
-
-        const pathToSave = destPath+'/'+fileName;
-        tar.create({
-            gzip: true,
-            C: this.cwd
-        },[this.dirName]).pipe(fs.createWriteStream(pathToSave));
-    }
-
-
-    /**
-     * This function decompress the Plugin into Specific folder
-     * @param folderTo 
-     * @param folderFrom 
-     */
-    decompress(folderTo: string,folderFrom: string): void {
-
-        const fileToDecompress = folderFrom+'/'+this.getPathToCompress();
-        fs.createReadStream(fileToDecompress).pipe(
-            tar.x({
-                C: folderTo
-            })
-        );
-    }
-
-    installTemplate() {
-
     }
 
     serialize() {

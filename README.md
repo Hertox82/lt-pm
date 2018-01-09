@@ -14,6 +14,10 @@ npm install -g lt-pm
 - [Uninstall Plugin](#uninstall-plugin)
 - [Packing Plugin](#packing-plugin)
 - [Delete Plugin](#delete-plugin-from-repo)
+- Install Template
+- Uninstall Template
+- Packing Template
+- Delete Template
 - [Change Log](#change-log)
 - [Todo list](#todo-list)
 
@@ -33,13 +37,18 @@ Actually there is a CLI that pack, delete pack, install and uninstall a Plugin
 
   Commands:
 
-    init              this command initialize ltpm.config.json
-    package <pack>    this command is to package a plugin
-    delpack <pack>    this command is to delete package a plugin
-    install <pack>    this command is to install a plugin
-    uninstall <pack>  this command is to install a plugin
-    latest            this command return all latest package inside of repo folder
-    test              this command is only for testing process.cwd()
+    init                this command initialize ltpm.config.json
+    package <pack>      this command is to package a plugin
+    delpack <pack>      this command is to delete package a plugin
+    install <pack>      this command is to install a plugin
+    uninstall <pack>    this command is to uninstall a plugin
+    latest              this command return all latest package inside of repo folder
+    latest-template     this command return all latest template inside of repo folder
+    package-t <pack>    this command is to package a template
+    deltemp <pack>      this command is to delete packed template
+    install-t <pack>    this command is to install a template
+    uninstall-t <pack>  this command is to uninstall a template
+    test                this command is only for testing process.cwd()
 ```
 
 ## Configuration file
@@ -73,7 +82,9 @@ remember to fill the option:
 
 `repo :` this is a folder where are located the compressed Plugin,
 
-`plugins :` When you will install a Plugin, in this place you can find the Config of that Plugin
+`plugins :` When you will install a Plugin, in this place you can find the Config of that Plugin,
+
+`template :` When you will install a Template, in this place you can find the configuration of that template
 
 Now you able to type all command
 
@@ -83,21 +94,33 @@ ltpm <command> <packeFileName>
 
 ## API
 
-The `PluginManger` have this API method:
+The `PackageManger` have this API method:
 
 ```typescript
-    export declared class PluginManager {
+    export declared class PackageManager {
         /**
          * This function return a List of Latest Plugin avaiable
-         * @param listOfInfo Plugin[]
          * @return Plugin[]
          */
          public getLatestPluginRepo(): Plugin[];
+
+        /**
+         * this function return the list of latest template
+         * @return Template [] 
+         */
+        public getLatestTemplateRepo(): Template[];
+
         /**
          * This function return all Plugin Installed into CMS
          * @returns Plugin[]
          */
         public getListPluginInstalled(): Plugin[];
+
+        /**
+         * This function return all Template Installed into CMS
+         * @returns Template[]
+         */
+        public getListTemplateInstalled(): Template[];
 
         /**
          * This function set installed Plugin into CMS
@@ -106,16 +129,35 @@ The `PluginManger` have this API method:
         public setListPluginInstalled(installedPlugin: Plugin[]);
 
         /**
+         * This function set installed Template into CMS
+         * @param installedTemplate Template[]
+         */
+        public setListTemplateInstalled(installedTemplate: Template[]);
+
+        /**
          * Install the Plugin from Folder compressed
          * @param plugin Plugin
          */
         public installPlugin(plugin: Plugin);
 
         /**
+         * This Install the Template from folder compressed
+         * @param template Template
+         */
+        public installTemplate(template: Template)
+
+        /**
          * Only erase Plugins Folder and maintain the compressedFile
          * @param plugin Plugin
          */
         public uninstallPlugin(plugin: Plugin);
+
+        /**
+         * Only erase Template Folder and maintain the compressedFile
+         * @param template Template
+         */
+        public uninstallTemplate(template: Template);
+
         /**
          * Compress the Plugin into folder compressed
          * @param plugin Plugin
@@ -123,10 +165,22 @@ The `PluginManger` have this API method:
         public packagePlugin(plugin: Plugin);
 
         /**
+         * This compress the Template into the .tgz file
+         * @param template Template
+         */
+        public packageTemplate(template: Template);
+
+        /**
          * Erase the compressed file
          * @param plugin Plugin
          */
         public deletePlugin(plugin: Plugin);
+
+        /**
+         * this function erase compressed file
+         * @param template Template
+         */
+        public deleteTemplate(template: Template);
 
         /**
          * This function update Plugin

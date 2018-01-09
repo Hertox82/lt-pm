@@ -3,7 +3,7 @@
 
 import * as program from 'commander';
 import * as path from 'path';
-import { PluginManager } from './lib/PluginManager';
+import { PackageManager } from './lib/PackageManager';
 import { Plugin } from './lib/Plugin';
 import * as ltpr from './lib/config.interface';
 import * as process from 'process';
@@ -42,7 +42,7 @@ program
     // take info from file
     log(chalk.default.yellow('reading configuration file ...'));
     const cf = ltpr.getConfigJSON(fileConfigPath);
-    const pm = new PluginManager(cf.repo,cf.cwd,cf.depl);
+    const pm = new PackageManager(cf.repo,cf.cwd,cf.depl);
     const plugin1 = Plugin.createPluginFromFile(pack);
     if(plugin1) {
       log(chalk.default.yellow('Compressing file into the folder'));
@@ -65,7 +65,7 @@ program
     // take info from file
     log(chalk.default.yellow('reading configuration file ...'));
     const cf = ltpr.getConfigJSON(fileConfigPath);
-    const pm = new PluginManager(cf.repo,cf.cwd,cf.depl);
+    const pm = new PackageManager(cf.repo,cf.cwd,cf.depl);
     const plugin1 = Plugin.createPluginFromFile(pack);
     if(plugin1) {
       log(chalk.default.yellow('Deleting package'));
@@ -88,7 +88,7 @@ program
     // take info from file
     log(chalk.default.yellow('reading configuration file ...'));
     const cf = ltpr.getConfigJSON(fileConfigPath);
-    const pm = new PluginManager(cf.repo,cf.cwd,cf.depl);
+    const pm = new PackageManager(cf.repo,cf.cwd,cf.depl);
     const plugin1 = Plugin.createPluginFromFile(pack);
     if(plugin1) {
       log(chalk.default.yellow('Installing Plugin ..'));
@@ -117,7 +117,7 @@ program
     // take info from file
     log(chalk.default.yellow('reading configuration file ...'));
     let cf = ltpr.getConfigJSON(fileConfigPath);
-    const pm = new PluginManager(cf.repo,cf.cwd,cf.depl);
+    const pm = new PackageManager(cf.repo,cf.cwd,cf.depl);
     const plugin1 = Plugin.createPluginFromFile(pack);
     if(plugin1) {
       log(chalk.default.yellow('Uninstalling Plugin ..'));
@@ -148,7 +148,7 @@ program
   const fileConfigPath = ltpr.cwd()+'/ltpm.config.json';
   if(ltpr.existFile(fileConfigPath)) {
     const cf = ltpr.getConfigJSON(fileConfigPath);
-    const pm = new PluginManager(cf.repo,cf.cwd,cf.depl);
+    const pm = new PackageManager(cf.repo,cf.cwd,cf.depl);
     log(pm.serializeLatestPluginRepo(cf.plugins));
   } else {
     log('{"error": "configuration_file_not_found"}');
@@ -162,7 +162,7 @@ program
   const fileConfigPath = ltpr.cwd()+'/ltpm.config.json';
   if(ltpr.existFile(fileConfigPath)) {
     const cf = ltpr.getConfigJSON(fileConfigPath);
-    const pm = new PluginManager(cf.repo,cf.cwd,cf.depl);
+    const pm = new PackageManager(cf.repo,cf.cwd,cf.depl);
     if(cf.deplt != undefined || cf.deplt != null) {
         pm.deplt = cf.deplt;
         if(cf.cwdT != undefined || cf.cwdT != null) {
@@ -190,7 +190,7 @@ program
     // take info from file
     log(chalk.default.yellow('reading configuration file ...'));
     const cf = ltpr.getConfigJSON(fileConfigPath);
-    const pm = new PluginManager(cf.repo,cf.cwd,cf.depl);
+    const pm = new PackageManager(cf.repo,cf.cwd,cf.depl);
     if(cf.deplt != undefined || cf.deplt != null) {
       pm.deplt = cf.deplt;
         if(cf.cwdT != undefined || cf.cwdT != null) {
@@ -223,7 +223,7 @@ program
     // take info from file
     log(chalk.default.yellow('reading configuration file ...'));
     const cf = ltpr.getConfigJSON(fileConfigPath);
-    const pm = new PluginManager(cf.repo,cf.cwd,cf.depl);
+    const pm = new PackageManager(cf.repo,cf.cwd,cf.depl);
     if(cf.deplt != undefined || cf.deplt != null) {
         pm.deplt = cf.deplt;
           if(cf.cwdT != undefined || cf.cwdT != null) {
@@ -256,7 +256,7 @@ program
     // take info from file
     log(chalk.default.yellow('reading configuration file ...'));
     const cf = ltpr.getConfigJSON(fileConfigPath);
-    const pm = new PluginManager(cf.repo,cf.cwd,cf.depl);
+    const pm = new PackageManager(cf.repo,cf.cwd,cf.depl);
     if(cf.deplt != undefined || cf.deplt != null) {
       pm.deplt = cf.deplt;
         if(cf.cwdT != undefined || cf.cwdT != null) {
@@ -295,7 +295,7 @@ program
     // take info from file
     log(chalk.default.yellow('reading configuration file ...'));
     let cf = ltpr.getConfigJSON(fileConfigPath);
-    const pm = new PluginManager(cf.repo,cf.cwd,cf.depl);
+    const pm = new PackageManager(cf.repo,cf.cwd,cf.depl);
     if(cf.deplt != undefined || cf.deplt != null) {
       pm.deplt = cf.deplt;
         if(cf.cwdT != undefined || cf.cwdT != null) {
