@@ -35,15 +35,4 @@ export class Template extends AbstractPack{
     public getPathToCompress(): string {
         return this._vendor+'-'+this.name+'-'+this._version+'_t.tgz';
     }
-
-    serialize() {
-        let obj = {
-            vendor: this._vendor,
-            name: this._name,
-            version: this._version,
-            packed: this.packed
-        };
-
-        return obj;
-    }
 }
