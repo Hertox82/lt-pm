@@ -1,2 +1,3 @@
 export {Plugin} from './lib/Plugin';
-export {PluginManager} from './lib/PluginManager';
+export {Template} from './lib/Template';
+export {PackageManager} from './lib/PackageManager';

@@ -66,7 +66,7 @@ program
     log(chalk.default.yellow('reading configuration file ...'));
     const cf = ltpr.getConfigJSON(fileConfigPath);
     const pm = new PackageManager(cf.repo,cf.cwd,cf.depl);
-    const plugin1 = Plugin.createPluginFromFile(pack);
+    const plugin1 = Plugin.createFromFile(pack);
     if(plugin1) {
       log(chalk.default.yellow('Deleting package'));
       pm.deletePlugin(plugin1);
@@ -89,7 +89,7 @@ program
     log(chalk.default.yellow('reading configuration file ...'));
     const cf = ltpr.getConfigJSON(fileConfigPath);
     const pm = new PackageManager(cf.repo,cf.cwd,cf.depl);
-    const plugin1 = Plugin.createPluginFromFile(pack);
+    const plugin1 = Plugin.createFromFile(pack);
     if(plugin1) {
       log(chalk.default.yellow('Installing Plugin ..'));
       pm.installPlugin(plugin1);
@@ -118,7 +118,7 @@ program
     log(chalk.default.yellow('reading configuration file ...'));
     let cf = ltpr.getConfigJSON(fileConfigPath);
     const pm = new PackageManager(cf.repo,cf.cwd,cf.depl);
-    const plugin1 = Plugin.createPluginFromFile(pack);
+    const plugin1 = Plugin.createFromFile(pack);
     if(plugin1) {
       log(chalk.default.yellow('Uninstalling Plugin ..'));
       pm.uninstallPlugin(plugin1);

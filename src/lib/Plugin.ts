@@ -6,7 +6,7 @@ import { AbstractPack } from './AbstractPack';
 export class Plugin extends AbstractPack{
    
     constructor(_name?: string, _vendor?: string, _version?: string) {
-        super();
+        super(_vendor,_name,_version);
         this.installed = false;
         this.packed = true;
     }
