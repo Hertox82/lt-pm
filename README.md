@@ -22,3 +22,10 @@ Please read the [documentation](https://github.com/Hertox82/lt-pm/wiki)
 - [ ]  PluginManger
   - [ ] Update Plugin
 
+
+
+
+
+
+
+[Hernan Ariel De Luca](https://www.linkedin.com/in/hernan-ariel-de-luca-23842254/)
