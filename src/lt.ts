@@ -13,7 +13,7 @@ import { Template } from './lib/Template';
 
 const log = console.log;
 program
-.version('1.2.0')
+.version('2.0.0')
 
 program
 .command('init')
