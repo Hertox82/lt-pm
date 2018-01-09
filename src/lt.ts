@@ -43,7 +43,7 @@ program
     log(chalk.default.yellow('reading configuration file ...'));
     const cf = ltpr.getConfigJSON(fileConfigPath);
     const pm = new PackageManager(cf.repo,cf.cwd,cf.depl);
-    const plugin1 = Plugin.createPluginFromFile(pack);
+    const plugin1 = Plugin.createFromFile(pack);
     if(plugin1) {
       log(chalk.default.yellow('Compressing file into the folder'));
       pm.packagePlugin(plugin1);
