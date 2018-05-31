@@ -29,10 +29,24 @@ export class Template extends AbstractPack{
     }
 
     /**
-     * this function return a name of Plugin compressed
+     * this function return a name of Template compressed
      * @returns string
      */
     public getPathToCompress(): string {
         return this._vendor+'-'+this.name+'-'+this._version+'_t.tgz';
+    }
+
+    /**
+     * This function serialize Template for File Config
+     * @returns {vendor: string, name: string, version: string}
+     */
+    serializeForConfig(): any {
+        let obj = {
+            vendor: this._vendor,
+            name: this._name,
+            version: this._version
+        };
+
+        return obj;
     }
 }

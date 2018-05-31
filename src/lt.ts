@@ -266,8 +266,10 @@ program
               log(chalk.default.yellow('Installing Template'));
               pm.installTemplate(template1);
               if(cf.template == undefined || cf.template == null) {
-               cf.template = template1.serialize();
+               //cf.template = template1.serialize();
+               cf.template = [];
               }
+              cf.template.push(template1.serialize());
               log(chalk.default.yellow('writing file config ...'));
                ltpr.writeConfigJSON(fileConfigPath,cf);
                log(chalk.default.green('well done! Finish to install the Template'));
@@ -304,8 +306,17 @@ program
             if(template1) {
               log(chalk.default.yellow('Uninstalling Template ..'));
               pm.uninstallTemplate(template1);
+              const tmp = template1.serializeForConfig();
+              const index = ltpr.findMe(cf.template,tmp);
+
+              if(index > -1) {
+                cf.template.splice(index,1);
+              }
+
               if(cf.template != undefined || cf.template != null) {
-               delete cf.template;
+                if(cf.template.length === 0) {
+                    delete cf.template;
+                }
               }
               log(chalk.default.yellow('writing file config ...'));
                ltpr.writeConfigJSON(fileConfigPath,cf);
