@@ -10,5 +10,19 @@
             "name": "",
             "version": ""
         }
+    ],
+    "template": [
+        {
+            "vendor": "vendor2",
+            "name": "template",
+            "version": "1.0.0",
+            "active": false
+        },
+        {
+            "vendor": "vendor3",
+            "name": "bello",
+            "version": "1.0.0",
+            "active": false
+        }
     ]
 }
