@@ -7,6 +7,11 @@ Please read the [documentation](https://github.com/Hertox82/lt-pm/wiki)
 
 ## CHANGE LOG
 
+**v 2.0.0**
+
+- Changed into file configuration the Type of Template: Now is a List of Template and not more a Simple Object
+- Added new commands `activate-t` and `deactivate-t` in order to Activate or Deactivate a Template
+
 **v 1.0.0**
 
 - Change class from PluginManager to PackageManager
