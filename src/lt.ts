@@ -140,10 +140,26 @@ program
     }
 
   });
+
+/*Latest Package*/  
+program
+.command('latest')
+.description('this command return all latest package inside of repo folder')
+.action(() => {
+  const fileConfigPath = ltpr.cwd() + '/ltpm.config.json';
+  if (ltpr.existFile(fileConfigPath)) {
+    const cf = ltpr.getConfigJSON(fileConfigPath);
+    const pm = new PackageManager(cf.repo, cf.cwd, cf.depl);
+    log(pm.serializeLatestPackage(cf.plugins,cf.template));
+  } else {
+    log('{"error": "configuration_file_not_found"}');
+  }
+}); 
+ 
 /* Latest Plugin */
 program
-  .command('latest')
-  .description('this command return all latest package inside of repo folder')
+  .command('latest-plugin')
+  .description('this command return all latest plugin inside of repo folder')
   .action(() => {
     const fileConfigPath = ltpr.cwd() + '/ltpm.config.json';
     if (ltpr.existFile(fileConfigPath)) {
@@ -167,7 +183,7 @@ program
         pm.deplt = cf.deplt;
         if (cf.cwdT != undefined || cf.cwdT != null) {
           pm.cwdT = cf.cwdT;
-          log(pm.serializeLatestTemplateRepo());
+          log(pm.serializeLatestTemplateRepo(cf.template));
         }
         else {
           log(chalk.default.red('The work template directory isn\'t initialized, please write it into the config file '));

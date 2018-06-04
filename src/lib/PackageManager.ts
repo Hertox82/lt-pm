@@ -58,25 +58,39 @@ export class PackageManager {
      * @return Template [] 
      */
     public getLatestTemplateRepo(): Template[] {
-
+        
         if(this._latestTemplateRepo == undefined || this._latestTemplateRepo.length == 0) {
             this._latestTemplateRepo = this.popListTemplate();
         }
+
+        //check if installed Template list
+        if(this._listOfTemplateInstalled.length != 0) {
+            this.checkIfTemplatesRepoInstalled(this._listOfTemplateInstalled);
+        }
         return  this._latestTemplateRepo;
+    }
+
+    public  serializeLatestPackage(listOfPlugin?: any, listOfTemplate?: any): string {
+        let listP = this.getLatestPluginToSerialize(listOfPlugin);
+        let listT = this.getLatestTemplateToSerialize(listOfTemplate);
+
+        let listToSerialize = {
+            Plugins: listP,
+            Templates: listT
+        }
+
+        return JSON.stringify(listToSerialize, null, '\t');
     }
 
     /**
      * this function return a list of latest template serialized
      * @return string
      */
-    public serializeLatestTemplateRepo(): string {
-        let listToSerialize = [];
-        this.getLatestTemplateRepo().forEach(
-            (item) => {
-                listToSerialize.push(item.serialize());
-            }
-        );
-        return JSON.stringify(listToSerialize);
+    public serializeLatestTemplateRepo(listInstalled?: any): string {
+        
+        let listToSerialize = this.getLatestTemplateToSerialize(listInstalled);
+
+        return JSON.stringify(listToSerialize, null, '\t');
     }
 
 
@@ -85,6 +99,18 @@ export class PackageManager {
      * @param listInstalled 
      */
     public serializeLatestPluginRepo(listInstalled?: any): string {
+
+       let listToSerialize = this.getLatestPluginToSerialize(listInstalled);
+
+        return JSON.stringify(listToSerialize,null,'\t');
+    }
+
+    /**
+     * This function return list of latest plugin
+     * @param listInstalled 
+     * @return any
+     */
+    protected getLatestPluginToSerialize(listInstalled?: any): any {
 
         if(listInstalled != undefined || listInstalled != null) {
             this.convertPluginCfToPlugin(listInstalled);
@@ -96,7 +122,27 @@ export class PackageManager {
             }
         );
 
-        return JSON.stringify(listToSerialize);
+        return listToSerialize;
+    }
+
+     /**
+     * This function return list of latest template
+     * @param listInstalled 
+     * @return any
+     */
+    protected getLatestTemplateToSerialize(listInstalled?: any): any {
+
+        if(listInstalled != undefined || listInstalled != null) {
+            this.convertTemplateCfToTemplate(listInstalled);
+        }
+        let listToSerialize = [];
+        this.getLatestTemplateRepo().forEach(
+            (template) => {
+                listToSerialize.push(template.serialize());
+            }
+        );
+
+        return listToSerialize;
     }
 
     /**
@@ -341,6 +387,12 @@ export class PackageManager {
         });
     }
 
+    protected convertTemplateCfToTemplate(list: any): void {
+        list.forEach(element => {
+            this._listOfTemplateInstalled.push(new Template(element.vendor,element.name,element.version));
+        });
+    }
+
     /**
      * This function check if Plugins are installed
      * @param arrayInfo 
@@ -353,6 +405,20 @@ export class PackageManager {
                     item.installed = true;
                 }
             }))
+        });
+    }
+
+    /**
+     * This function check if Templates are installed
+     * @param arrayInfo 
+     */
+    protected checkIfTemplatesRepoInstalled(arrayInfo: Template[]): void {
+        this._latestTemplateRepo.forEach((item)=> {
+            arrayInfo.forEach((it)=>{
+                if(it.name === item.name && it.vendor === item.vendor && it.version === item.version) {
+                    item.installed = true;
+                }
+            });
         });
     }
 
@@ -467,8 +533,10 @@ export class PackageManager {
             (item) => {
                 if(item != '.DS_Store') {
                     let obj = Plugin.createFromFile(item);
-                    obj.packed = true;
-                    arrayFile.push(obj);
+                    if(obj) {
+                        obj.packed = true;
+                        arrayFile.push(obj);
+                    }
                 } else {
                     fs.unlinkSync(this.repo+'/'+item);
                 }
@@ -489,6 +557,7 @@ export class PackageManager {
                     let obj = Template.createFromFile(item);
 
                     if(obj) {
+                        obj.packed = true;
                         arrayFile.push(obj);
                     }
                 } else {

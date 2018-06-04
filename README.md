@@ -7,6 +7,11 @@ Please read the [documentation](https://github.com/Hertox82/lt-pm/wiki)
 
 ## CHANGE LOG
 
+**v 2.1.0**
+
+- Modified result of `latest` command, now the output is JSON with Plugins and Templates
+- Added `latest-plugin` command, get the latest plugin packed.
+
 **v 2.0.0**
 
 - Changed into file configuration the Type of Template: Now is a List of Template and not more a Simple Object
