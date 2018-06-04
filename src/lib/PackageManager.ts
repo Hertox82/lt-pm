@@ -79,7 +79,7 @@ export class PackageManager {
             Templates: listT
         }
 
-        return JSON.stringify(listToSerialize, null, '\t');
+        return JSON.stringify(listToSerialize);
     }
 
     /**
@@ -90,7 +90,7 @@ export class PackageManager {
         
         let listToSerialize = this.getLatestTemplateToSerialize(listInstalled);
 
-        return JSON.stringify(listToSerialize, null, '\t');
+        return JSON.stringify(listToSerialize);
     }
 
 
@@ -102,7 +102,7 @@ export class PackageManager {
 
        let listToSerialize = this.getLatestPluginToSerialize(listInstalled);
 
-        return JSON.stringify(listToSerialize,null,'\t');
+        return JSON.stringify(listToSerialize);
     }
 
     /**
