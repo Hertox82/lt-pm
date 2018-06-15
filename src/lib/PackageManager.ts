@@ -493,7 +493,7 @@ export class PackageManager {
             (item) => {
                 const dirItem = dirPath+'/'+item;
                 const stat = fs.statSync(dirItem);
-                if(stat.isFile){
+                if(stat.isFile()){
                     fs.unlinkSync(dirItem);
                 }
                 else if(stat.isDirectory){
