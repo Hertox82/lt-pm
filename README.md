@@ -7,6 +7,11 @@ Please read the [documentation](https://github.com/Hertox82/lt-pm/wiki)
 
 ## CHANGE LOG
 
+**v 2.1.2**
+
+- Fixed error when uninstall a template
+
+
 **v 2.1.1**
 
 - Fixed error when output the json on latest-plugin and latest-template
