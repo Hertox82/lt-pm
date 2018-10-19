@@ -1,6 +1,6 @@
 {
   "name": "lt-pm",
-  "version": "2.1.2",
+  "version": "3.0.0",
   "license": "MIT",
   "description": "This package manage all plugins and template into Lortom CMS",
   "main": "index.js",
