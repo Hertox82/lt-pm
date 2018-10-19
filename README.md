@@ -11,6 +11,10 @@ Please read the [documentation](https://github.com/Hertox82/lt-pm/wiki)
 
 ## CHANGE LOG
 
+**v 3.0.0**
+
+- This version support typescript from ^2.4.2
+
 **v 2.1.2**
 
 - Fixed error when uninstall a template
