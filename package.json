@@ -26,7 +26,7 @@
   "devDependencies": {
     "@types/npm": "^2.0.29",
     "@types/tar": "^4.0.0",
-    "typescript": "~2.3.3"
+    "typescript": "^2.4.2"
   },
   "dependencies": {
     "chalk": "^2.3.0",

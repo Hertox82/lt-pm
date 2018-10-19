@@ -4,6 +4,10 @@ This is a Lortom Package Manager and allows to manage all package of Lortom CMS.
 
 Please read the [documentation](https://github.com/Hertox82/lt-pm/wiki)
 
+| versione | Typescript Support |
+| :-------------: |:-------------------------:|
+|      ^2.x.x       |         ~2.3.3          |
+|      ^3.x.x       |        ^2.4.2           |
 
 ## CHANGE LOG
 
