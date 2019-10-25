@@ -7,9 +7,15 @@ Please read the [documentation](https://github.com/Hertox82/lt-pm/wiki)
 | versione | Typescript Support |
 | :-------------: |:-------------------------:|
 |      ^2.x.x       |         ~2.3.3          |
-|      ^3.x.x       |        ^2.4.2           |
+|      ^3.0.x       |        ^2.4.2           |
+|      ^3.1.x       |        ~2.9.2           |
 
 ## CHANGE LOG
+
+**v 3.1.0**
+
+- This version support typescript ~2.9.2
+- Updated tar version ~4.4.13
 
 **v 3.0.0**
 
