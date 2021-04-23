@@ -23,12 +23,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "build-lt": "tsc src/lt.ts -t es5 -d --sourceMap",
-    "build-lib": "tsc src/index.ts -t es5 -d --sourceMap"
+    "build-lib": "tsc src/index.ts -t es5 -d --sourceMap",
+    "postbuild-lib": "bash after-compile.sh"
   },
   "devDependencies": {
     "@types/npm": "^2.0.29",
     "@types/tar": "^4.0.0",
-    "typescript": "~2.9.2"
+    "typescript": "~3.2.2"
   },
   "dependencies": {
     "chalk": "^2.3.0",

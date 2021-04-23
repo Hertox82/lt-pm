@@ -1,6 +1,6 @@
 import * as path from 'path'; 
 import {Plugin} from '../src/lib/Plugin';
-import {PluginManager} from '../src/lib/PluginManager';
+import {PackageManager} from '../src/lib/PackageManager';
 
 
 enum Action {
@@ -14,6 +14,7 @@ enum Action {
 
 let decompress = true;
 let plManager = true;
+let listOfInstalled = [];
 
 const cwd = path.resolve(__dirname+'/../test/plugins');
 const compr = path.resolve(__dirname+'/../test/compressed');
@@ -31,16 +32,16 @@ if(!plManager) {
         plugin2.dirName = 'vendor1/namePlugin2';
         plugin2.compress(compr);
     } else {
-        const plugin1 = Plugin.createPluginFromFile('vendor1-namePlugin-1.0.0.tgz');
-        const plugin2 = Plugin.createPluginFromFile('vendor1-namePlugin2-1.0.0.tgz');
+        const plugin1 = Plugin.createFromFile('vendor1-namePlugin-1.0.0.tgz');
+        const plugin2 = Plugin.createFromFile('vendor1-namePlugin2-1.0.0.tgz');
 
         plugin1.decompress(depl,compr);
         plugin2.decompress(depl,compr);
     }
 } else {
-    const pm = new PluginManager(compr,cwd,depl);
+    const pm = new PackageManager(compr,cwd,depl);
     //this info passed by third party
-    const listOfInstalled =[];
+    //const listOfInstalled =[];
     pm.setListPluginInstalled(listOfInstalled);
     let listPluginRepo = pm.getLatestPluginRepo();
     const action = Action.Nothing;
@@ -51,12 +52,12 @@ if(!plManager) {
         break;
 
         case Action.Uninstall: 
-            this.listOfInstalled.forEach((pl)=>{
+            listOfInstalled.forEach((pl)=>{
                 if(pl.installed){
                     pm.uninstallPlugin(pl);
                 }
             });
-            this.listOfInstalled = pm.getListPluginInstalled();
+            listOfInstalled = pm.getListPluginInstalled();
         break;
 
         case Action.Install: 
@@ -70,7 +71,7 @@ if(!plManager) {
         break;
 
         case Action.Package: 
-            let listOfInstalled = pm.getListPluginInstalled();
+            listOfInstalled = pm.getListPluginInstalled();
             listOfInstalled.forEach((plug) => {
                 if(!plug.compress) {
                     pm.packagePlugin(plug);

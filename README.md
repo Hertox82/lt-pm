@@ -9,8 +9,13 @@ Please read the [documentation](https://github.com/Hertox82/lt-pm/wiki)
 |      ^2.x.x       |         ~2.3.3          |
 |      ~3.0.x       |        ^2.4.2           |
 |      ~3.1.x       |        ~2.9.2           |
+|      ~4.x         |        ~3.2.2           |
 
 ## CHANGE LOG
+
+**v 4.0.0**
+
+- This version support typescript ~3.2.2
 
 **v 3.1.0**
 
